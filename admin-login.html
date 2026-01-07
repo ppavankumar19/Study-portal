@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login • Study Portal</title>
+  <style>
+    :root{
+      --bg:#020617;
+      --glass:rgba(15,23,42,0.85);
+      --ink:#e5e7eb;
+      --muted:#9ca3af;
+      --line:rgba(148,163,184,0.5);
+      --primary:#38bdf8;
+      --danger:#fb7185;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%, #1d4ed8 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, #22c55e 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, #e11d48 0, transparent 55%),
+        #020617;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      color:var(--ink);
+    }
+    .card{
+      width:100%;
+      max-width:380px;
+      background:var(--glass);
+      border-radius:22px;
+      border:1px solid var(--line);
+      box-shadow:
+        0 24px 70px rgba(15,23,42,0.95),
+        0 0 0 1px rgba(15,23,42,0.7);
+      backdrop-filter:blur(26px);
+      -webkit-backdrop-filter:blur(26px);
+      padding:20px 18px 16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:'';
+      position:absolute;
+      inset:-60px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.26), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(236,72,153,0.2), transparent 60%);
+      mix-blend-mode:soft-light;
+      opacity:.7;
+    }
+    .inner{
+      position:relative;
+      z-index:1;
+    }
+    .logo{
+      width:40px; height:40px; border-radius:14px;
+      background:conic-gradient(from 210deg,#22c55e,#38bdf8,#6366f1,#ec4899,#22c55e);
+      box-shadow:0 12px 28px rgba(37,99,235,0.9);
+      margin-bottom:10px;
+    }
+    h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing:.03em;
+    }
+    .sub{
+      margin:6px 0 14px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    label{
+      display:block;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.15em;
+      color:var(--muted);
+      margin:14px 0 6px;
+    }
+    .field{
+      position:relative;
+    }
+    input[type="text"],
+    input[type="password"]{
+      width:100%;
+      border-radius:14px;
+      border:1px solid var(--line);
+      padding:10px 38px 10px 11px;
+      outline:none;
+      background:rgba(15,23,42,0.96);
+      color:var(--ink);
+      font-size:13px;
+      transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease,
+        transform .08s ease;
+    }
+    input:focus{
+      border-color:rgba(56,189,248,0.85);
+      box-shadow:0 0 0 1px rgba(56,189,248,0.6),0 0 0 10px rgba(56,189,248,0.18);
+      background:rgba(15,23,42,1);
+      transform:translateY(-1px);
+    }
+    .eye{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:14px;
+      color:var(--muted);
+      transition:background .16s ease,color .16s ease,transform .08s ease;
+    }
+    .eye:hover{
+      background:rgba(15,23,42,0.9);
+      color:var(--ink);
+      transform:translateY(-50%) scale(1.03);
+    }
+
+    .btn{
+      width:100%;
+      border-radius:999px;
+      border:1px solid rgba(56,189,248,0.85);
+      padding:10px 12px;
+      margin-top:16px;
+      font-weight:600;
+      font-size:13px;
+      cursor:pointer;
+      background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#020617;
+      box-shadow:0 18px 40px rgba(8,47,73,0.95);
+      transition:
+        transform .16s ease,
+        box-shadow .16s ease,
+        filter .16s ease;
+    }
+    .btn:hover{
+      filter:brightness(1.06);
+      transform:translateY(-1px);
+      box-shadow:0 24px 48px rgba(8,47,73,1);
+    }
+
+    .status{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      min-height:16px;
+    }
+    .status.error{ color:var(--danger); }
+    .hint{
+      margin-top:10px;
+      font-size:11px;
+      color:var(--muted);
+    }
+    .hint code{
+      background:rgba(15,23,42,0.9);
+      padding:2px 4px;
+      border-radius:6px;
+      border:1px solid rgba(148,163,184,0.5);
+    }
+
+    @media(max-width:480px){
+      .card{ border-radius:18px; padding:18px 16px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="inner">
+      <div class="logo"></div>
+      <h1>Admin sign in</h1>
+      <p class="sub">Enter your admin credentials to manage lessons.</p>
+
+      <label>Username</label>
+      <input type="text" id="username" autocomplete="username" />
+
+      <label>Password</label>
+      <div class="field">
+        <input type="password" id="password" autocomplete="current-password" />
+        <div class="eye" id="togglePassword" aria-label="Toggle password visibility">
+          👁️
+        </div>
+      </div>
+
+      <button class="btn" onclick="login()">Sign in</button>
+
+      <div id="status" class="status"></div>
+
+      <div class="hint">
+        Default: <code>admin</code> / <code>secret123</code>  
+        (change in <code>server.js</code>).
+      </div>
+    </div>
+  </div>
+
+<script>
+  const passwordInput = document.getElementById('password');
+  const togglePassword = document.getElementById('togglePassword');
+  const statusEl = document.getElementById('status');
+
+  togglePassword.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    togglePassword.textContent = isPassword ? '🙈' : '👁️';
+  });
+
+  async function login(){
+    const username = document.getElementById('username').value.trim();
+    const password = passwordInput.value;
+
+    statusEl.className = 'status';
+    statusEl.textContent = 'Signing in...';
+
+    try{
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers:{ 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (!res.ok){
+        statusEl.className = 'status error';
+        statusEl.textContent = data.error || 'Login failed';
+        return;
+      }
+      statusEl.textContent = 'Success, redirecting...';
+      window.location.href = '/admin.html';
+    } catch(e){
+      statusEl.className = 'status error';
+      statusEl.textContent = 'Error: ' + e.message;
+    }
+  }
+
+  passwordInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study Portal</title>
+  <style>
+    :root{
+      --bg:#020617;
+      --sidebar:#020617;
+      --glass:rgba(15,23,42,0.82);
+      --ink:#e5e7eb;
+      --muted:#9ca3af;
+      --line:rgba(148,163,184,0.35);
+      --primary:#38bdf8;
+      --primary2:#0ea5e9;
+      --chip-bg:rgba(15,23,42,0.9);
+    }
+    *{ box-sizing:border-box; }
+    html, body{
+      margin:0;
+      padding:0;
+      height:100%;
+      width:100%;
+    }
+    body{
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 0% 0%, #1d4ed8 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, #22c55e 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, #e11d48 0, transparent 55%),
+        #020617;
+      display:flex;
+      overflow:hidden;
+      height:100vh;
+    }
+    aside{
+      position:relative;
+      width:340px;
+      height:100%;
+      background:linear-gradient(145deg, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+      border-right:1px solid rgba(30,64,175,0.7);
+      padding:18px 18px 16px;
+      overflow-y:auto;
+      overflow-x:hidden;
+      backdrop-filter:blur(26px);
+      -webkit-backdrop-filter:blur(26px);
+      box-shadow: 16px 0 45px rgba(15,23,42,0.9);
+      z-index:2;
+      flex-shrink:0;
+    }
+    /* scrollbar styling for sidebar */
+    aside::-webkit-scrollbar{
+      width:10px;
+    }
+    aside::-webkit-scrollbar-track{
+      background:transparent;
+    }
+    aside::-webkit-scrollbar-thumb{
+      background:rgba(56,189,248,0.6);
+      border-radius:999px;
+      border:2px solid transparent;
+      background-clip:content-box;
+    }
+    aside::-webkit-scrollbar-thumb:hover{
+      background:rgba(56,189,248,0.9);
+      background-clip:content-box;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px 6px 16px;
+      border-bottom:1px solid rgba(15,23,42,0.95);
+      margin-bottom:12px;
+    }
+    .logo-wrap{
+      position:relative;
+      width:40px; height:40px;
+    }
+    .logo{
+      width:38px; height:38px; border-radius:13px;
+      background:conic-gradient(from 220deg, #22c55e, #22c55e, #38bdf8, #6366f1, #ec4899, #22c55e);
+      box-shadow:0 10px 22px rgba(37,99,235,0.8);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo::after{
+      content:'';
+      position:absolute;
+      inset:2px;
+      border-radius:11px;
+      background:radial-gradient(circle at 0 0, rgba(248,250,252,0.75), transparent 55%);
+      mix-blend-mode:screen;
+      opacity:.85;
+    }
+    .brand h1{
+      font-size:17px;
+      margin:0;
+      letter-spacing:.03em;
+    }
+    .brand p{
+      margin:4px 0 0;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .search{
+      width:100%;
+      padding:10px 11px;
+      border:1px solid rgba(148,163,184,0.6);
+      border-radius:999px;
+      outline:none;
+      background:rgba(15,23,42,0.96);
+      color:var(--ink);
+      margin:12px 0 10px;
+      font-size:13px;
+      transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease,
+        transform .08s ease;
+    }
+    .search:focus{
+      border-color:rgba(56,189,248,0.85);
+      box-shadow:0 0 0 1px rgba(56,189,248,0.6),0 0 0 10px rgba(56,189,248,0.16);
+      background:rgba(15,23,42,0.98);
+      transform:translateY(-1px);
+    }
+
+    #list{
+      margin-top:6px;
+    }
+    .lesson{
+      border-radius:16px;
+      padding:11px 11px 10px;
+      margin:8px 0;
+      cursor:pointer;
+      background:radial-gradient(circle at 0 0, rgba(56,189,248,0.12), rgba(15,23,42,0.96));
+      border:1px solid rgba(148,163,184,0.7);
+      transition:
+        background .16s ease,
+        transform .16s ease,
+        border-color .16s ease,
+        box-shadow .18s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .lesson::before{
+      content:'';
+      position:absolute;
+      inset:-40px;
+      background:conic-gradient(from 220deg,
+        transparent 0,
+        rgba(56,189,248,0.32) 90deg,
+        transparent 140deg);
+      opacity:0;
+      transition:opacity .25s ease, transform .25s ease;
+      transform:translate3d(-40px,-40px,0);
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+    .lesson:hover{
+      border-color:rgba(56,189,248,0.9);
+      background:radial-gradient(circle at 0 0, rgba(56,189,248,0.22), rgba(15,23,42,0.95));
+      transform:translateY(-2px);
+      box-shadow:0 16px 30px rgba(15,23,42,0.9);
+    }
+    .lesson:hover::before{
+      opacity:1;
+      transform:translate3d(0,0,0);
+    }
+    .lesson .t{ font-weight:600; font-size:13px; }
+    .lesson .s{ margin-top:3px; color:var(--muted); font-size:11px; }
+
+    .footer{
+      margin-top:16px;
+      padding-top:10px;
+      border-top:1px solid rgba(15,23,42,0.95);
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:flex-start;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    main{
+      flex:1;
+      height:100%;
+      padding:26px;
+      overflow-y:scroll;
+      overflow-x:hidden;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
+    /* scrollbar styling for main content */
+    main::-webkit-scrollbar{
+      width:12px;
+    }
+    main::-webkit-scrollbar-track{
+      background:transparent;
+    }
+    main::-webkit-scrollbar-thumb{
+      background:rgba(56,189,248,0.6);
+      border-radius:999px;
+      border:2px solid transparent;
+      background-clip:content-box;
+    }
+    main::-webkit-scrollbar-thumb:hover{
+      background:rgba(56,189,248,0.9);
+      background-clip:content-box;
+    }
+
+    @media(max-width:900px){
+      body{ flex-direction:column; }
+      aside{
+        width:100%;
+        height:auto;
+        box-shadow:none;
+        border-right:none;
+        border-bottom:1px solid rgba(15,23,42,0.95);
+        max-height:40vh;
+      }
+      main{
+        padding:18px;
+        flex:1;
+        height:auto;
+        overflow-y:auto;
+      }
+    }
+
+    .card{
+      width:100%;
+      max-width:980px;
+      background:var(--glass);
+      border:1px solid rgba(148,163,184,0.5);
+      border-radius:24px;
+      box-shadow:
+        0 30px 80px rgba(15,23,42,0.9),
+        0 0 0 1px rgba(15,23,42,0.7);
+      padding:22px 22px 20px;
+      backdrop-filter:blur(26px);
+      -webkit-backdrop-filter:blur(26px);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:'';
+      position:absolute;
+      inset:-80px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.22), transparent 50%),
+        radial-gradient(circle at 100% 0, rgba(236,72,153,0.18), transparent 55%);
+      opacity:.65;
+      pointer-events:none;
+      mix-blend-mode:soft-light;
+    }
+    .card-inner{
+      position:relative;
+      z-index:1;
+    }
+
+    .title{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .title h2{
+      margin:0;
+      font-size:22px;
+      letter-spacing:.02em;
+    }
+    .desc{
+      color:var(--muted);
+      margin:8px 0 0;
+      line-height:1.7;
+      font-size:13px;
+    }
+
+    .chip{
+      padding:7px 11px;
+      border-radius:999px;
+      background:var(--chip-bg);
+      border:1px solid rgba(56,189,248,0.7);
+      color:var(--ink);
+      font-size:11px;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      white-space:nowrap;
+    }
+    .chip::before{
+      content:'●';
+      font-size:9px;
+      color:#4ade80;
+    }
+
+    .media{
+      margin-top:18px;
+      border-radius:18px;
+      border:1px solid rgba(15,23,42,0.95);
+      background:#020617;
+      padding:13px;
+      box-shadow:0 20px 40px rgba(15,23,42,0.95);
+    }
+    video{
+      width:100%;
+      max-height:520px;
+      border-radius:14px;
+      background:#000;
+      display:block;
+    }
+    audio{
+      width:100%;
+      margin-top:8px;
+      display:block;
+    }
+
+    .actions{
+      margin-top:14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 14px;
+      border-radius:999px;
+      border:1px solid rgba(56,189,248,0.75);
+      background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+      color:#020617;
+      text-decoration:none;
+      font-weight:600;
+      font-size:13px;
+      box-shadow:0 14px 34px rgba(8,47,73,0.9);
+      transition:
+        transform .16s ease,
+        box-shadow .16s ease,
+        filter .16s ease;
+    }
+    .btn:hover{
+      filter:brightness(1.07);
+      transform:translateY(-1px);
+      box-shadow:0 20px 40px rgba(8,47,73,1);
+    }
+
+    .tasks{
+      margin-top:16px;
+      border-radius:16px;
+      border:1px solid rgba(251,191,36,0.75);
+      background:rgba(24,20,4,0.98);
+      padding:13px 13px 12px;
+      white-space:pre-wrap;
+      line-height:1.8;
+      font-size:13px;
+      position:relative;
+      overflow:hidden;
+      margin-bottom:40px;
+    }
+    .tasks::before{
+      content:'Tasks';
+      position:absolute;
+      top:8px;
+      right:13px;
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      color:rgba(250,204,21,0.7);
+    }
+
+    .empty{
+      width:100%;
+      max-width:640px;
+      margin:30px auto 0;
+      text-align:center;
+      color:var(--muted);
+      padding:20px 18px 18px;
+      border-radius:22px;
+      border:1px dashed rgba(148,163,184,0.55);
+      background:rgba(15,23,42,0.9);
+      backdrop-filter:blur(26px);
+      -webkit-backdrop-filter:blur(26px);
+      box-shadow:0 26px 50px rgba(15,23,42,0.9);
+    }
+    .empty h2{
+      margin:0 0 6px;
+      font-size:19px;
+    }
+    .empty p{
+      margin:0;
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    @media(max-width:600px){
+      .card{ border-radius:18px; padding:18px 16px 16px; }
+      .title h2{ font-size:19px; }
+      main{ padding:14px; }
+    }
+  </style>
+</head>
+<body>
+  <aside>
+    <div class="brand">
+      <div class="logo-wrap">
+        <div class="logo"></div>
+      </div>
+      <div>
+        <h1>Study Portal</h1>
+        <p>Lessons • Audio • Video</p>
+      </div>
+    </div>
+
+    <input class="search" id="q" placeholder="Search lessons..." />
+
+    <div id="list"></div>
+
+    <div class="footer">
+      <span id="count">0 lessons</span>
+    </div>
+  </aside>
+
+  <main>
+    <div id="content" class="empty">
+      <h2>Select a lesson to start</h2>
+      <p>Add lessons from the admin side, then explore them here with inline audio/video playback.</p>
+    </div>
+  </main>
+
+<script>
+  let lessons = [];
+
+  function isAudioFile(name){
+    const ext = (name || '').toLowerCase().split('.').pop();
+    return ['m4a','mp4a','mp3','wav','ogg'].includes(ext);
+  }
+
+  function mimeFor(name){
+    const ext = (name || '').toLowerCase().split('.').pop();
+    if (ext === 'mp4') return 'video/mp4';
+    if (ext === 'webm') return 'video/webm';
+    if (ext === 'm4a' || ext === 'mp4a') return 'audio/mp4';
+    if (ext === 'mp3') return 'audio/mpeg';
+    if (ext === 'wav') return 'audio/wav';
+    if (ext === 'ogg') return 'audio/ogg';
+    return '';
+  }
+
+  async function loadLessons(){
+    const res = await fetch('/api/lessons?ts=' + Date.now());
+    lessons = await res.json();
+
+    document.getElementById('count').textContent =
+      `${lessons.length} lesson${lessons.length===1?'':'s'}`;
+    renderList();
+  }
+
+  function renderList(){
+    const q = (document.getElementById('q').value || '').toLowerCase().trim();
+    const filtered = lessons.filter(l =>
+      (l.title || '').toLowerCase().includes(q)
+    );
+
+    const list = document.getElementById('list');
+    if (!filtered.length){
+      list.innerHTML =
+        `<div style="color:#9ca3af;font-size:12px;padding:8px;">No lessons found.</div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(l => `
+      <div class="lesson" onclick="showLesson(${l.id})">
+        <div class="t">${escapeHtml(l.title || '')}</div>
+        <div class="s">${escapeHtml(l.mediaFile ? l.mediaFile : 'No media file')}</div>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[c]));
+  }
+
+  function escapeAttr(s){
+    return String(s).replace(/"/g, '&quot;');
+  }
+
+  function showLesson(id){
+    const l = lessons.find(x => x.id == id);
+    if (!l) return;
+
+    const hasMedia = !!(l.mediaFile && l.mediaFile.trim());
+    const url = hasMedia
+      ? `/video/${encodeURIComponent(l.mediaFile)}?ts=${Date.now()}`
+      : '';
+
+    let mediaHtml = `<div class="chip" style="border-color:rgba(156,163,175,0.7);">
+      No media uploaded for this lesson.
+    </div>`;
+
+    if (hasMedia){
+      if (isAudioFile(l.mediaFile)){
+        mediaHtml = `
+          <audio controls>
+            <source src="${url}" type="${mimeFor(l.mediaFile)}">
+            Your browser does not support the audio element.
+          </audio>
+        `;
+      } else {
+        mediaHtml = `
+          <video controls>
+            <source src="${url}" type="${mimeFor(l.mediaFile) || 'video/mp4'}">
+            Your browser does not support the video element.
+          </video>
+        `;
+      }
+    }
+
+    const linkBtn = (l.resourceLink && l.resourceLink.trim())
+      ? `<a class="btn" href="${escapeAttr(l.resourceLink)}" target="_blank" rel="noopener">
+           Open resource
+         </a>`
+      : '';
+
+    document.getElementById('content').className = '';
+    document.getElementById('content').innerHTML = `
+      <div class="card">
+        <div class="card-inner">
+          <div class="title">
+            <div>
+              <h2>${escapeHtml(l.title || '')}</h2>
+              <div class="desc">${escapeHtml(l.description || '')}</div>
+            </div>
+            <div class="chip">
+              ${hasMedia
+                ? (isAudioFile(l.mediaFile) ? 'Audio lesson' : 'Video lesson')
+                : 'No media'}
+            </div>
+          </div>
+
+          <div class="media">
+            ${mediaHtml}
+          </div>
+
+          <div class="actions">
+            ${linkBtn}
+            ${hasMedia
+              ? `<span class="chip" style="border-color:rgba(148,163,184,0.7);">
+                   File: ${escapeHtml(l.mediaFile)}
+                 </span>`
+              : ''}
+          </div>
+
+          <div class="tasks">
+${escapeHtml(l.tasks || '')}
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Scroll to top of main content after loading
+    const main = document.querySelector('main');
+    if (main) {
+      main.scrollTop = 0;
+    }
+  }
+
+  document.getElementById('q').addEventListener('input', renderList);
+
+  loadLessons();
+</script>
+</body>
+</html>

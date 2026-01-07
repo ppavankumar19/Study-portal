@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1767710843810,
+    "title": "HTML.",
+    "description": "Fundamental topic in web application development.",
+    "mediaFile": "html_1767711640738.m4a",
+    "resourceLink": "",
+    "tasks": "Created an dynamic Web Page.\nFor the algorithms, and sum.c, product.c programs.\nInteracting through different .html pages."
+  },
+  {
+    "id": 1767714376590,
+    "title": "Files and Files Systems.",
+    "description": "Deep Dive into how files and file systems works in our Systems.",
+    "mediaFile": "files_1767714376008.m4a",
+    "resourceLink": "",
+    "tasks": "None."
+  },
+  {
+    "id": 1767714618921,
+    "title": "Applications",
+    "description": "How our digital world works and thier principals?",
+    "mediaFile": "application_1767714618192.mp4",
+    "resourceLink": "",
+    "tasks": "None."
+  }
+]
