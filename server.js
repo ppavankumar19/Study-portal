@@ -5,18 +5,19 @@ const multer = require('multer');
 const cookieParser = require('cookie-parser');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const ROOT = __dirname;
 const DATA_FILE = path.join(ROOT, 'data.json');
 const VIDEO_DIR = path.join(ROOT, 'video');
 
-// ==== SIMPLE ADMIN CREDS (change these) ====
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'secret123';
-const COOKIE_NAME = 'study_admin';
+// ==== ADMIN CREDENTIALS (set via environment variables) ====
+const ADMIN_USER   = process.env.ADMIN_USER   || 'admin';
+const ADMIN_PASS   = process.env.ADMIN_PASS   || 'secret123';
+const COOKIE_SECRET = process.env.COOKIE_SECRET || 'change-this-secret-key';
+const COOKIE_NAME  = 'study_admin';
 const COOKIE_VALUE = 'ok';
-// ===========================================
+// ===========================================================
 
 // ensure folders/files
 if (!fs.existsSync(VIDEO_DIR)) fs.mkdirSync(VIDEO_DIR, { recursive: true });
@@ -24,7 +25,7 @@ if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, '[]', 'utf8');
 
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser('change-this-secret-key'));
+app.use(cookieParser(COOKIE_SECRET));
 
 // static
 app.use(express.static(ROOT));
@@ -41,7 +42,12 @@ function readLessons() {
   }
 }
 function writeLessons(lessons) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(lessons, null, 2), 'utf8');
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(lessons, null, 2), 'utf8');
+  } catch (err) {
+    console.error('[writeLessons] Failed to write data file:', err);
+    throw new Error('Failed to save lesson data.');
+  }
 }
 
 // multer upload config
@@ -175,6 +181,5 @@ app.listen(PORT, () => {
   console.log(`Study Portal running:
   Student:     http://localhost:${PORT}/
   Admin login: http://localhost:${PORT}/admin-login
-  Credentials: admin / secret123
 `);
 });

@@ -1,19 +1,20 @@
 {
+  "name": "study-portal",
+  "version": "1.0.0",
+  "description": "A self-hosted educational portal for delivering lessons with audio/video support and an admin management dashboard.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "echo \"No tests configured yet\" && exit 0"
+  },
+  "keywords": ["education", "portal", "lessons", "audio", "video"],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
     "multer": "^2.0.2"
-  },
-  "name": "study-portal",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  }
 }
